@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Visite">
+<meta name="theme-color" content="#1240e0">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-180.png">
+<title>Visite clienti</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light dark;--bg:light-dark(#ffffff,#0a0d18);--ink:light-dark(#0b0e17,#e9ecf5);--mute:light-dark(#5a6275,#9aa3b8);--zone:light-dark(#eef2ff,#141a2e);--line:light-dark(#d5dcef,#262e48);--co:#1240e0;--co2:light-dark(#1240e0,#7d99ff);--red:light-dark(#c8102e,#ff6b7d);--card:light-dark(#fff,#10152a)}
+*{box-sizing:border-box;min-width:0;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Inter,system-ui,sans-serif;overflow-x:clip;padding-bottom:calc(76px + env(safe-area-inset-bottom))}
+h1,h2,h3{font-family:"Space Grotesk",Inter,sans-serif;margin:0;line-height:1.1;text-wrap:balance}
+.top{background:var(--co);color:#fff;padding:calc(14px + env(safe-area-inset-top)) max(5vw,16px) 14px;display:flex;align-items:end;justify-content:space-between;gap:12px}
+.top h1{font-size:32px}
+.gear{border:0;background:#ffffff26;color:#fff;border-radius:12px;width:44px;height:44px;display:grid;place-items:center;cursor:pointer}
+.gear svg{width:24px;height:24px}
+main{max-width:720px;margin:0 auto;padding:16px max(4vw,14px)}
+.view{display:none}.view.on{display:block}
+label{display:block;font-size:14px;font-weight:600;margin:14px 0 6px}
+input,select,textarea{width:100%;font:16px/1.4 Inter,sans-serif;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;min-height:44px}
+textarea{resize:vertical}
+input:focus,select:focus,textarea:focus,button:focus-visible{outline:3px solid color-mix(in srgb,var(--co2) 45%,transparent);outline-offset:1px;border-color:var(--co2)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--zone);border-radius:12px;padding:4px;margin-top:18px}
+.seg button{border:0;background:none;font:600 15px Inter,sans-serif;color:var(--mute);min-height:44px;border-radius:9px}
+.seg button.on{background:var(--card);color:var(--co2);box-shadow:0 1px 3px #0002}
+.hint{background:var(--zone);border-radius:10px;padding:10px 12px;font-size:14px;color:var(--mute);margin-top:12px}
+.hint b{color:var(--ink)}
+.recbox{margin-top:16px;background:var(--zone);border-radius:18px;padding:22px 16px;text-align:center}
+.recbtn{width:96px;height:96px;border-radius:50%;border:6px solid var(--card);background:var(--red);box-shadow:0 0 0 2px var(--red);cursor:pointer;display:grid;place-items:center;margin:0 auto}
+.recbtn i{display:block;width:34px;height:34px;border-radius:50%;background:#fff}
+.recbtn.on i{border-radius:6px;width:30px;height:30px}
+.recbtn.on{animation:pulse 1.6s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--red) 25%,transparent)}}
+.clock{font:600 36px "Space Grotesk",sans-serif;margin-top:12px;font-variant-numeric:tabular-nums}
+.rs{font-size:14px;color:var(--mute);min-height:21px}
+.wave{height:36px;display:flex;align-items:center;justify-content:center;gap:3px;margin-top:6px}
+.wave span{width:4px;border-radius:2px;background:var(--red);height:4px;transition:height .08s}
+audio{width:100%;margin-top:12px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:12px;border:0;font:600 16px Inter,sans-serif;background:var(--co);color:#fff;cursor:pointer;text-decoration:none}
+.btn.full{width:100%;margin-top:16px}
+.btn.ghost{background:var(--zone);color:var(--co2)}
+.recbox .btn.ghost{background:var(--card)}
+.btn.sm{min-height:40px;font-size:14px;padding:0 12px}
+.btn.danger{background:none;color:var(--red);border:1.5px solid var(--red)}
+.btn:disabled{opacity:.55}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.res{margin-top:24px;border-top:3px solid var(--co);padding-top:16px}
+.res h2,.sheet h2{font-size:24px}
+.sec{margin-top:18px}
+.sec h3{font-size:17px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kv{background:var(--zone);border-radius:10px;padding:10px 12px;font-size:15px}
+.kv div+div{margin-top:4px}.kv span{color:var(--mute)}
+.act{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;background:var(--zone);border-radius:10px;padding:10px;margin-bottom:8px}
+.act .sub{display:grid;grid-template-columns:minmax(0,1fr) 150px;gap:6px}
+.x{border:0;background:none;color:var(--mute);font-size:22px;width:44px;min-height:44px;cursor:pointer}
+.err{color:var(--red);font-size:14px;margin-top:10px}
+.chips{display:flex;gap:8px;margin-bottom:12px}
+.chips button{border:1.5px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;min-height:40px;padding:0 16px;font:600 14px Inter,sans-serif}
+.chips button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.grp{font:600 13px Inter,sans-serif;color:var(--mute);margin:18px 0 6px}.grp.late{color:var(--red)}
+.todo{display:grid;grid-template-columns:44px minmax(0,1fr);align-items:start;border-bottom:1px solid var(--line);padding:8px 0}
+.todo input{width:24px;height:24px;min-height:0;margin:10px;accent-color:var(--co)}
+.todo .t{font-weight:500}.todo.done .t{text-decoration:line-through;color:var(--mute)}
+.todo .m{font-size:13px;color:var(--mute)}.todo .m a{color:var(--co2)}
+.due.late{color:var(--red);font-weight:600}
+.card{display:block;width:100%;text-align:left;background:var(--card);border:1.5px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;color:var(--ink);font:inherit;cursor:pointer}
+.card b{font-family:"Space Grotesk",sans-serif;font-size:18px}
+.card .m{font-size:13px;color:var(--mute);margin-top:2px}
+.badge{display:inline-block;background:var(--zone);color:var(--co2);font-size:13px;font-weight:600;border-radius:99px;padding:1px 9px;margin-left:6px}
+.empty{text-align:center;color:var(--mute);padding:40px 10px}
+.empty svg{width:120px;display:block;margin:0 auto 12px}
+nav{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(3,1fr);padding-bottom:env(safe-area-inset-bottom);z-index:5}
+nav a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0;min-height:56px;color:var(--mute);text-decoration:none;font-size:12px;font-weight:600}
+nav a svg{width:24px;height:24px}nav a.on{color:var(--co2)}
+nav .n{background:var(--red);color:#fff;border-radius:99px;font-size:11px;padding:0 6px;margin-left:2px}
+.sheet{position:fixed;inset:0;background:var(--bg);z-index:10;overflow-y:auto;padding:calc(12px + env(safe-area-inset-top)) max(4vw,14px) calc(30px + env(safe-area-inset-bottom));display:none}
+.sheet.on{display:block}.sheet .in{max-width:720px;margin:0 auto}
+.back{border:0;background:none;color:var(--co2);font:600 16px Inter,sans-serif;min-height:44px;padding:0;cursor:pointer}
+pre.crm{white-space:pre-wrap;font:15px/1.5 Inter,sans-serif;background:var(--zone);border-radius:10px;padding:12px;margin:0}
+details{margin-top:18px}summary{font-weight:600;cursor:pointer;min-height:44px;display:flex;align-items:center}
+.toast{position:fixed;left:50%;bottom:calc(90px + env(safe-area-inset-bottom));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:99px;font-size:14px;z-index:20;opacity:0;transition:opacity .2s;pointer-events:none;max-width:90vw;text-align:center}
+.toast.on{opacity:1}
+.spin{width:18px;height:18px;border:2.5px solid #fff6;border-top-color:#fff;border-radius:50%;animation:r .8s linear infinite}
+@keyframes r{to{transform:rotate(1turn)}}
+@media(prefers-reduced-motion:reduce){.spin,.recbtn.on{animation:none}}
+@media(max-width:420px){.act .sub{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<header class="top"><h1 id="ttl">Nuova visita</h1><button class="gear" id="b-set" type="button" aria-label="Impostazioni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></header>
+
+<main>
+<section class="view" id="v-nuova">
+  <div class="hint" id="nokey" hidden><b>Primo avvio:</b> inserisci la chiave API nelle impostazioni (ingranaggio in alto) per attivare i riassunti.</div>
+  <label for="f-cli">Cliente</label>
+  <input id="f-cli" autocomplete="off" placeholder="Nome azienda">
+  <div class="row">
+    <div><label for="f-data">Data</label><input id="f-data" type="date"></div>
+    <div><label for="f-luogo">Luogo</label><input id="f-luogo" placeholder="Città"></div>
+  </div>
+  <label for="f-con">Con (commerciale)</label>
+  <input id="f-con" placeholder="Chi ti accompagnava">
+
+  <div class="seg">
+    <button id="m-dett" class="on" type="button">Dettato dopo la visita</button>
+    <button id="m-riun" type="button">Riunione intera</button>
+  </div>
+
+  <div class="recbox">
+    <button class="recbtn" id="b-rec" type="button" aria-label="Avvia registrazione"><i></i></button>
+    <div class="clock" id="clock">00:00</div>
+    <div class="wave" id="wave" aria-hidden="true"></div>
+    <div class="rs" id="rs">Tocca per registrare</div>
+    <div class="tools" id="rtools">
+      <button class="btn ghost sm" id="b-pause" type="button" hidden>Pausa</button>
+      <a class="btn ghost sm" id="b-dl" hidden download>Salva audio</a>
+      <button class="btn ghost sm" id="b-del" type="button" hidden>Cancella audio</button>
+      <label class="btn ghost sm" style="margin:0">Carica audio<input type="file" id="f-audio" accept="audio/*,.m4a,.mp3,.wav" hidden></label>
+    </div>
+    <audio id="player" controls hidden></audio>
+  </div>
+  <div class="hint" id="h-mode">Parla subito dopo la visita: chi c'era, cosa serve al cliente, prodotti, prezzi, cosa avete promesso.</div>
+
+  <label for="f-raw">Note scritte (facoltative)</label>
+  <textarea id="f-raw" rows="3" placeholder="Aggiunte o correzioni, es. il codice esatto di un prodotto"></textarea>
+  <button class="btn full" id="b-gen" type="button">Genera riassunto</button>
+  <div class="err" id="e-gen" role="alert"></div>
+
+  <div class="res" id="res" hidden>
+    <h2>Riassunto della visita</h2>
+    <div class="sec"><h3>Testo per il CRM <button class="btn ghost sm" id="b-copy" type="button">Copia</button></h3>
+      <textarea id="r-crm" rows="12"></textarea></div>
+    <div class="sec" id="r-det"></div>
+    <div class="sec"><h3>Azioni da fare <button class="btn ghost sm" id="b-add" type="button">+ Aggiungi</button></h3><div id="r-act"></div></div>
+    <button class="btn full" id="b-save" type="button">Salva visita</button>
+    <button class="btn full ghost" id="b-reset" type="button">Scarta e ricomincia</button>
+  </div>
+</section>
+
+<section class="view" id="v-azioni">
+  <div class="chips"><button id="c-open" class="on" type="button">Da fare</button><button id="c-done" type="button">Fatte</button></div>
+  <div id="todo"></div>
+</section>
+
+<section class="view" id="v-visite">
+  <input id="q" type="search" placeholder="Cerca cliente, prodotto, persona…" aria-label="Cerca">
+  <div id="list" style="margin-top:12px"></div>
+</section>
+</main>
+
+<div class="sheet" id="sheet"><div class="in" id="sheet-in"></div></div>
+<div class="sheet" id="settings"><div class="in">
+  <button class="back" id="s-close" type="button">‹ Indietro</button>
+  <h2 style="margin-top:6px">Impostazioni</h2>
+  <label for="k-key">Chiave API Gemini</label>
+  <input id="k-key" type="password" autocomplete="off" placeholder="AIza…">
+  <div class="hint">Creala gratis su <b>aistudio.google.com</b> → Get API key. Resta salvata solo su questo telefono. Con il piano gratuito Google può usare i contenuti per migliorare i suoi servizi: per visite riservate attiva la fatturazione sul progetto (costo di pochi centesimi a visita).</div>
+  <label for="k-model">Modello</label>
+  <input id="k-model" autocomplete="off" placeholder="gemini-flash-latest">
+  <label for="k-lang">Lingua dei riassunti</label>
+  <select id="k-lang"><option value="it">Italiano</option><option value="en">English</option></select>
+  <button class="btn full" id="k-save" type="button">Salva impostazioni</button>
+  <h3 style="margin-top:28px;font-size:17px">Backup</h3>
+  <div class="hint">Le visite sono salvate solo in questa app. Fai ogni tanto un backup e conservalo in iCloud Drive.</div>
+  <div class="tools" style="justify-content:start"><button class="btn ghost sm" id="k-exp" type="button">Esporta backup</button><label class="btn ghost sm" style="margin:0">Importa backup<input type="file" id="k-imp" accept=".json,application/json" hidden></label></div>
+</div></div>
+<div class="toast" id="toast"></div>
+
+<nav>
+  <a href="#nuova" id="n-nuova"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>Nuova</a>
+  <a href="#azioni" id="n-azioni"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6l2 2 3-3M4 13l2 2 3-3M12 7h8M12 14h8M12 20h8"/></svg><span>Azioni<span class="n" id="n-cnt" hidden></span></span></a>
+  <a href="#visite" id="n-visite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/></svg>Visite</a>
+</nav>
+
+<script>
+{
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+const today=()=>iso(new Date());
+const fmt=s=>{if(!s)return'';const d=new Date(s+'T12:00');return isNaN(d)?s:d.toLocaleDateString('it-IT',{weekday:'short',day:'numeric',month:'short'})};
+const uidGen=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const toast=t=>{const e=$('toast');e.textContent=t;e.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>e.classList.remove('on'),2200)};
+const ls={get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){toast('Memoria piena: esporta un backup')}}};
+const cfg=()=>({key:'',model:'gemini-flash-latest',lang:'it',...ls.get('vv-cfg',{})});
+
+/* ---------- IndexedDB per l'audio (sopravvive a chiusure improvvise) ---------- */
+const idb=(()=>{let p;const open=()=>p||(p=new Promise((res,rej)=>{const r=indexedDB.open('visite-audio',1);r.onupgradeneeded=()=>r.result.createObjectStore('chunks',{autoIncrement:true});r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)}));
+  const tx=async(m,f)=>{const db=await open();return new Promise((res,rej)=>{const t=db.transaction('chunks',m),s=t.objectStore('chunks'),r=f(s);t.oncomplete=()=>res(r&&r.result);t.onerror=()=>rej(t.error)})};
+  return{add:b=>tx('readwrite',s=>s.add(b)),all:()=>tx('readonly',s=>s.getAll()),clear:()=>tx('readwrite',s=>s.clear())}})();
+
+let visits=ls.get('vv-visits',[]),draft=null,capt='dett',filt='open';
+function persist(v){const i=visits.findIndex(x=>x.id===v.id);i<0?visits.push(v):visits[i]=v;ls.set('vv-visits',visits);renderAll()}
+function remove(id){visits=visits.filter(v=>v.id!==id);ls.set('vv-visits',visits);renderAll()}
+
+/* ---------- registrazione ---------- */
+let rec=null,stream=null,chunks=[],audioBlob=null,audioMime='',t0=0,acc=0,tick=null,wake=null,an=null,raf=0;
+const W=$('wave');W.innerHTML='<span></span>'.repeat(24);const bars=[...W.children];
+const pad=n=>String(n).padStart(2,'0');
+const showClock=ms=>{const s=Math.floor(ms/1000);$('clock').textContent=(s>=3600?Math.floor(s/3600)+':':'')+pad(Math.floor(s/60)%60)+':'+pad(s%60)};
+const elapsed=()=>acc+(rec&&rec.state==='recording'?Date.now()-t0:0);
+async function lockScreen(){try{wake=await navigator.wakeLock?.request('screen')}catch(e){}}
+function meter(){if(!an)return;const d=new Uint8Array(an.frequencyBinCount);an.getByteTimeDomainData(d);let m=0;for(const x of d)m=Math.max(m,Math.abs(x-128));const h=Math.max(4,Math.min(36,m/2.2));bars.push(bars.shift());bars.forEach((b,i)=>{if(i===bars.length-1)b.style.height=h+'px'});W.append(...bars);raf=requestAnimationFrame(meter)}
+async function startRec(){
+  $('e-gen').textContent='';
+  if(!navigator.mediaDevices?.getUserMedia||!window.MediaRecorder){$('rs').textContent='Questo browser non può registrare: apri l\'app da Safari.';return}
+  try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}})}
+  catch(e){$('rs').textContent='Microfono negato: abilitalo in Impostazioni iPhone → Safari → Microfono.';return}
+  await idb.clear().catch(()=>{});clearAudio(false);
+  audioMime=['audio/mp4','audio/webm;codecs=opus','audio/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+  rec=new MediaRecorder(stream,audioMime?{mimeType:audioMime,audioBitsPerSecond:48000}:{});
+  audioMime=(rec.mimeType||audioMime||'audio/mp4');ls.set('vv-recmime',audioMime);
+  chunks=[];rec.ondataavailable=e=>{if(e.data&&e.data.size){chunks.push(e.data);idb.add(e.data).catch(()=>{})}};
+  rec.onstop=()=>{finishRec()};
+  rec.start(5000);t0=Date.now();acc=0;tick=setInterval(()=>showClock(elapsed()),500);
+  try{const ac=new (window.AudioContext||window.webkitAudioContext)();an=ac.createAnalyser();an.fftSize=512;ac.createMediaStreamSource(stream).connect(an);meter()}catch(e){}
+  lockScreen();
+  $('b-rec').classList.add('on');$('b-rec').setAttribute('aria-label','Ferma registrazione');$('b-pause').hidden=false;$('b-pause').textContent='Pausa';
+  $('rs').textContent='Sto registrando · tieni lo schermo acceso e l\'app aperta';
+}
+function stopRec(){if(rec&&rec.state!=='inactive'){acc=elapsed();rec.stop()}}
+function finishRec(){
+  clearInterval(tick);cancelAnimationFrame(raf);an=null;bars.forEach(b=>b.style.height='4px');
+  stream&&stream.getTracks().forEach(t=>t.stop());stream=null;try{wake&&wake.release()}catch(e){}wake=null;
+  $('b-rec').classList.remove('on');$('b-rec').setAttribute('aria-label','Avvia registrazione');$('b-pause').hidden=true;
+  if(chunks.length)setAudio(new Blob(chunks,{type:audioMime}),'Registrazione pronta · '+$('clock').textContent);
+  rec=null;
+}
+function setAudio(b,msg){audioBlob=b;const u=URL.createObjectURL(b);$('player').src=u;$('player').hidden=false;$('b-dl').href=u;$('b-dl').download='visita-'+today()+(b.type.includes('webm')?'.webm':'.m4a');$('b-dl').hidden=false;$('b-del').hidden=false;$('rs').textContent=msg}
+function clearAudio(wipe=true){audioBlob=null;chunks=[];$('player').hidden=true;$('player').removeAttribute('src');$('b-dl').hidden=true;$('b-del').hidden=true;showClock(0);$('rs').textContent='Tocca per registrare';if(wipe)idb.clear().catch(()=>{})}
+$('b-rec').onclick=()=>{if(rec)stopRec();else if(audioBlob){if(armDel('b-rec'))return;startRec()}else startRec()};
+let delArm=0;function armDel(){if(Date.now()-delArm<3000)return false;delArm=Date.now();$('rs').textContent='Tocca di nuovo per sostituire la registrazione';return true}
+$('b-pause').onclick=()=>{if(!rec)return;if(rec.state==='recording'){acc=elapsed();rec.pause();$('b-pause').textContent='Riprendi';$('rs').textContent='In pausa'}else{t0=Date.now();rec.resume();$('b-pause').textContent='Pausa';$('rs').textContent='Sto registrando · tieni lo schermo acceso e l\'app aperta'}};
+$('b-del').onclick=()=>{if(armDelBtn())return;clearAudio()};
+let dArm=0;function armDelBtn(){if(Date.now()-dArm<3000)return false;dArm=Date.now();toast('Tocca di nuovo per cancellare l\'audio');return true}
+$('f-audio').onchange=e=>{const f=e.target.files[0];if(!f)return;clearAudio();setAudio(f,'Audio caricato: '+f.name);e.target.value=''};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'){if(rec&&stream&&stream.getAudioTracks().some(t=>t.readyState==='ended')){stopRec();toast('La registrazione si è fermata quando l\'app è andata in background. L\'audio fino a quel punto è salvo.')}if(rec)lockScreen()}});
+(async()=>{try{const c=await idb.all();if(c&&c.length){audioMime=ls.get('vv-recmime','audio/mp4');chunks=c;setAudio(new Blob(c,{type:audioMime}),'Registrazione recuperata dalla sessione precedente')}}catch(e){}})();
+
+/* ---------- campi e bozza ---------- */
+$('f-data').value=today();
+const inputs=['f-cli','f-data','f-luogo','f-con','f-raw'];
+function saveInput(){const o={capt};inputs.forEach(k=>o[k]=$(k).value);ls.set('vv-input',o)}
+function setCapt(m){capt=m;$('m-dett').classList.toggle('on',m==='dett');$('m-riun').classList.toggle('on',m==='riun');
+  $('h-mode').innerHTML=m==='dett'?'Parla subito dopo la visita: chi c\'era, cosa serve al cliente, prodotti, prezzi, cosa avete promesso.':'Appoggia il telefono sul tavolo al centro, <b>con lo schermo acceso e l\'app aperta</b> (iOS ferma il microfono se blocchi il telefono). Chiedi sempre il consenso dei presenti prima di registrare.'}
+$('m-dett').onclick=()=>{setCapt('dett');saveInput()};$('m-riun').onclick=()=>{setCapt('riun');saveInput()};
+(()=>{const o=ls.get('vv-input',null);if(o){inputs.forEach(k=>{if(o[k])$(k).value=o[k]});setCapt(o.capt||'dett')}const d=ls.get('vv-draft',null);if(d){draft=d;showDraft()}})();
+inputs.forEach(k=>$(k).addEventListener('input',saveInput));
+
+/* ---------- Gemini ---------- */
+const G='https://generativelanguage.googleapis.com';
+async function gfetch(url,opt){const r=await fetch(url,opt);if(!r.ok){let m='';try{m=(await r.json()).error.message}catch(e){}throw new Error(r.status===400&&/API key/i.test(m)?'Chiave API non valida: controllala nelle impostazioni.':r.status===429?'Limite di richieste raggiunto: riprova tra un minuto.':r.status===404?'Modello non trovato: controlla il nome nelle impostazioni.':'Errore del servizio ('+r.status+') '+m)}return r}
+async function uploadFile(blob,mime,key,status){
+  status('Carico l\'audio…');
+  const s=await gfetch(G+'/upload/v1beta/files',{method:'POST',headers:{'x-goog-api-key':key,'X-Goog-Upload-Protocol':'resumable','X-Goog-Upload-Command':'start','X-Goog-Upload-Header-Content-Length':String(blob.size),'X-Goog-Upload-Header-Content-Type':mime,'Content-Type':'application/json'},body:JSON.stringify({file:{display_name:'visita-'+Date.now()}})});
+  const up=s.headers.get('x-goog-upload-url');if(!up)throw new Error('Caricamento audio non riuscito.');
+  const u=await gfetch(up,{method:'POST',headers:{'X-Goog-Upload-Offset':'0','X-Goog-Upload-Command':'upload, finalize'},body:blob});
+  let f=(await u.json()).file;
+  for(let i=0;f.state==='PROCESSING'&&i<90;i++){status('Google sta elaborando l\'audio…');await new Promise(r=>setTimeout(r,2000));f=await (await gfetch(G+'/v1beta/'+f.name,{headers:{'x-goog-api-key':key}})).json()}
+  if(f.state==='FAILED')throw new Error('Google non è riuscito a leggere l\'audio.');
+  return f;
+}
+const b64=blob=>new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(String(r.result).split(',')[1]);r.onerror=rej;r.readAsDataURL(blob)});
+function buildPrompt(hasAudio){
+  const c=cfg(),d=$('f-data').value||today(),wd=new Date(d+'T12:00').toLocaleDateString('it-IT',{weekday:'long'}),en=c.lang==='en';
+  return `Sei l'assistente di Andrea, Product Specialist di Metal Work S.p.A. (automazione pneumatica: cilindri, valvole, isole di valvole come EB 80, trattamento aria come Syntesi, raccordi, vuoto). Andrea affianca i commerciali nelle visite ai clienti.
+${hasAudio?(capt==='dett'?'L\'audio allegato è il resoconto che Andrea ha dettato dopo la visita.':'L\'audio allegato è la registrazione dell\'intera riunione con il cliente, con più voci.'):''} ${$('f-raw').value.trim()?'Le note scritte qui sotto hanno la precedenza sull\'audio in caso di differenze.':''}
+Estrai le informazioni della visita.
+
+Dati noti: cliente "${$('f-cli').value}", data visita ${d} (${wd}), luogo "${$('f-luogo').value}", commerciale presente "${$('f-con').value}".
+
+Regole:
+- Non inventare nulla: se un dato non c'è, stringa vuota o lista vuota.
+- Riporta codici e serie prodotto come detti; correggi solo errori evidenti di pronuncia.
+- Le scadenze relative ("entro venerdì", "la settimana prossima") diventano date YYYY-MM-DD a partire dalla data della visita. Senza scadenza: stringa vuota.
+- "chi" è chi deve fare l'azione (Andrea, il commerciale, il cliente, l'ufficio tecnico…).
+- Tutti i testi in ${en?'inglese':'italiano'}.
+- "crm": testo pronto da incollare nel CRM, sobrio e professionale, con queste sezioni su righe separate e titoli semplici senza simboli markdown: Cliente e partecipanti, Contesto e applicazione, Prodotti discussi, Opportunità, Prossimi passi (con date). Frasi brevi, niente asterischi o cancelletti.
+- "trascrizione": ${capt==='dett'?'la trascrizione fedele di quanto detto':'i passaggi salienti della conversazione, in forma di appunti, massimo 40 righe'}.
+
+Rispondi solo con JSON con questa forma:
+{"cliente":"","luogo":"","persone":[{"nome":"","ruolo":"","azienda":""}],"applicazione":"","prodotti":[{"nome":"","note":""}],"opportunita":{"descrizione":"","quantita":"","prezzi":"","concorrenti":"","potenziale":""},"azioni":[{"cosa":"","chi":"","scadenza":""}],"crm":"","trascrizione":""}
+${$('f-raw').value.trim()?'\nNOTE SCRITTE:\n"""\n'+$('f-raw').value.trim()+'\n"""':''}`;
+}
+function parseJSON(t){const a=t.indexOf('{'),b=t.lastIndexOf('}');return JSON.parse(t.slice(a,b+1))}
+$('b-gen').onclick=async()=>{
+  const e=$('e-gen'),c=cfg();e.textContent='';
+  if(rec){e.textContent='Ferma prima la registrazione.';return}
+  if(!audioBlob&&!$('f-raw').value.trim()){e.textContent='Registra la visita o scrivi qualche nota.';return}
+  if(!c.key){e.textContent='Inserisci la chiave API nelle impostazioni.';openSettings();return}
+  const b=$('b-gen');b.disabled=true;const status=t=>b.innerHTML='<span class="spin"></span> '+esc(t);
+  try{
+    const parts=[{text:buildPrompt(!!audioBlob)}];
+    if(audioBlob){const mime=(audioBlob.type||'audio/mp4').split(';')[0].replace('audio/x-m4a','audio/mp4');
+      if(audioBlob.size<12e6){status('Preparo l\'audio…');parts.push({inline_data:{mime_type:mime,data:await b64(audioBlob)}})}
+      else{const f=await uploadFile(audioBlob,mime,c.key,status);parts.push({file_data:{mime_type:f.mimeType||mime,file_uri:f.uri}})}}
+    status('Ascolto e preparo il riassunto…');
+    const r=await gfetch(G+'/v1beta/models/'+encodeURIComponent(c.model||'gemini-flash-latest')+':generateContent',{method:'POST',headers:{'x-goog-api-key':c.key,'Content-Type':'application/json'},body:JSON.stringify({contents:[{role:'user',parts}],generationConfig:{responseMimeType:'application/json',temperature:0.2}})});
+    const j=await r.json(),txt=(j.candidates?.[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+    if(!txt)throw new Error('Nessuna risposta dal modello. Riprova.');
+    const o=parseJSON(txt);
+    draft={id:uidGen(),cliente:$('f-cli').value.trim()||o.cliente||'Cliente',data:$('f-data').value||today(),luogo:$('f-luogo').value.trim()||o.luogo||'',con:$('f-con').value.trim(),modo:capt,raw:$('f-raw').value,trascrizione:o.trascrizione||'',durata:audioBlob?$('clock').textContent:'',
+      persone:Array.isArray(o.persone)?o.persone:[],applicazione:o.applicazione||'',prodotti:Array.isArray(o.prodotti)?o.prodotti:[],opportunita:o.opportunita||{},crm:o.crm||'',
+      azioni:(Array.isArray(o.azioni)?o.azioni:[]).map(a=>({id:uidGen(),cosa:String(a.cosa||''),chi:String(a.chi||''),scadenza:/^\d{4}-\d\d-\d\d$/.test(a.scadenza||'')?a.scadenza:'',fatta:false}))};
+    ls.set('vv-draft',draft);showDraft();$('res').scrollIntoView({behavior:'smooth'});
+  }catch(err){e.textContent=err.message==='Failed to fetch'?'Nessuna connessione: l\'audio resta salvato, riprova quando sei online.':err.message}
+  finally{b.disabled=false;b.textContent='Genera riassunto'}
+};
+
+/* ---------- riassunto ---------- */
+function detHTML(v){
+  const o=v.opportunita||{},pp=(v.persone||[]).filter(p=>p.nome||p.ruolo),pr=(v.prodotti||[]).filter(p=>p.nome);let h='';
+  if(pp.length)h+=`<h3>Persone</h3><div class="kv">${pp.map(p=>`<div>${esc(p.nome)}${p.ruolo?` <span>· ${esc(p.ruolo)}</span>`:''}${p.azienda?` <span>· ${esc(p.azienda)}</span>`:''}</div>`).join('')}</div>`;
+  if(v.applicazione)h+=`<h3 style="margin-top:14px">Applicazione</h3><div class="kv">${esc(v.applicazione)}</div>`;
+  if(pr.length)h+=`<h3 style="margin-top:14px">Prodotti</h3><div class="kv">${pr.map(p=>`<div><b>${esc(p.nome)}</b>${p.note?` <span>— ${esc(p.note)}</span>`:''}</div>`).join('')}</div>`;
+  const ol=[['Opportunità',o.descrizione],['Quantità',o.quantita],['Prezzi',o.prezzi],['Concorrenti',o.concorrenti],['Potenziale',o.potenziale]].filter(x=>x[1]);
+  if(ol.length)h+=`<h3 style="margin-top:14px">Opportunità</h3><div class="kv">${ol.map(x=>`<div><span>${x[0]}:</span> ${esc(x[1])}</div>`).join('')}</div>`;
+  return h;
+}
+function showDraft(){$('res').hidden=false;$('r-crm').value=draft.crm;$('r-det').innerHTML=detHTML(draft);drawActs()}
+function drawActs(){$('r-act').innerHTML=draft.azioni.length?draft.azioni.map((a,i)=>`<div class="act"><div><input data-i="${i}" data-k="cosa" value="${esc(a.cosa)}" placeholder="Cosa fare" aria-label="Azione"><div class="sub" style="margin-top:6px"><input data-i="${i}" data-k="chi" value="${esc(a.chi)}" placeholder="Chi" aria-label="Chi"><input type="date" data-i="${i}" data-k="scadenza" value="${esc(a.scadenza)}" aria-label="Scadenza"></div></div><button class="x" data-del="${i}" type="button" aria-label="Rimuovi">×</button></div>`).join(''):'<div class="hint">Nessuna azione trovata. Aggiungila tu se serve.</div>'}
+$('r-act').addEventListener('input',e=>{const t=e.target;if(t.dataset.k){draft.azioni[+t.dataset.i][t.dataset.k]=t.value;ls.set('vv-draft',draft)}});
+$('r-act').addEventListener('click',e=>{const i=e.target.dataset.del;if(i!=null){draft.azioni.splice(+i,1);ls.set('vv-draft',draft);drawActs()}});
+$('r-crm').addEventListener('input',()=>{draft.crm=$('r-crm').value;ls.set('vv-draft',draft)});
+$('b-add').onclick=()=>{draft.azioni.push({id:uidGen(),cosa:'',chi:'Andrea',scadenza:'',fatta:false});drawActs();$('r-act').querySelector('.act:last-child input').focus()};
+async function copy(t){try{await navigator.clipboard.writeText(t);toast('Copiato: incollalo nel CRM')}catch(e){toast('Copia non riuscita: seleziona il testo a mano')}}
+$('b-copy').onclick=()=>copy($('r-crm').value);
+function clearNew(){draft=null;ls.set('vv-draft',null);ls.set('vv-input',null);['f-cli','f-luogo','f-con','f-raw'].forEach(k=>$(k).value='');$('f-data').value=today();$('res').hidden=true;clearAudio()}
+$('b-save').onclick=()=>{draft.azioni=draft.azioni.filter(a=>a.cosa.trim());draft.salvata=new Date().toISOString();persist(draft);clearNew();toast('Visita salvata');location.hash='#azioni'};
+let rArm=0;$('b-reset').onclick=()=>{if(Date.now()-rArm>3000){rArm=Date.now();$('b-reset').textContent='Tocca di nuovo per scartare';setTimeout(()=>$('b-reset').textContent='Scarta e ricomincia',3000);return}$('b-reset').textContent='Scarta e ricomincia';clearNew();scrollTo(0,0)};
+
+/* ---------- azioni ---------- */
+const allActs=()=>visits.flatMap(v=>(v.azioni||[]).map(a=>({...a,v})));
+function toggleAct(vid,aid,val){const v=visits.find(x=>x.id===vid);if(!v)return;const a=(v.azioni||[]).find(x=>x.id===aid);if(a){a.fatta=val;a.fattaIl=val?today():'';persist(v)}}
+function todoRow(a){const late=!a.fatta&&a.scadenza&&a.scadenza<today();
+  return `<div class="todo${a.fatta?' done':''}"><input type="checkbox" data-v="${esc(a.v.id)}" data-a="${esc(a.id)}" ${a.fatta?'checked':''} aria-label="Fatta"><div><div class="t">${esc(a.cosa)}</div><div class="m"><a href="#visite" data-open="${esc(a.v.id)}">${esc(a.v.cliente)}</a>${a.chi?' · '+esc(a.chi):''}${a.scadenza?` · <span class="due${late?' late':''}">${esc(fmt(a.scadenza))}</span>`:''}</div></div></div>`}
+const empty=t=>`<div class="empty"><svg viewBox="0 0 120 90"><rect x="22" y="10" width="76" height="72" rx="8" fill="var(--zone)" stroke="var(--line)" stroke-width="2"/><rect x="44" y="4" width="32" height="14" rx="4" fill="var(--co)"/><path d="M36 38l6 6 10-10M36 60l6 6 10-10" stroke="var(--co2)" stroke-width="3" fill="none" stroke-linecap="round"/><path d="M60 40h26M60 62h20" stroke="var(--line)" stroke-width="4" stroke-linecap="round"/></svg>${esc(t)}</div>`;
+function renderTodo(){
+  const acts=allActs(),t=today(),open=acts.filter(a=>!a.fatta);
+  const n=open.filter(a=>a.scadenza&&a.scadenza<=t).length;$('n-cnt').hidden=!n;$('n-cnt').textContent=n;
+  $('c-open').classList.toggle('on',filt==='open');$('c-done').classList.toggle('on',filt==='done');
+  let h='';
+  if(filt==='open'){const by=f=>open.filter(f).sort((a,b)=>(a.scadenza||'').localeCompare(b.scadenza||'')),wk=iso(new Date(Date.now()+7*864e5));
+    const g=[['In ritardo',by(a=>a.scadenza&&a.scadenza<t),'late'],['Oggi',by(a=>a.scadenza===t),''],['Prossimi 7 giorni',by(a=>a.scadenza>t&&a.scadenza<=wk),''],['Più avanti',by(a=>a.scadenza>wk),''],['Senza scadenza',open.filter(a=>!a.scadenza),'']];
+    h=g.filter(x=>x[1].length).map(x=>`<div class="grp ${x[2]}">${x[0]} · ${x[1].length}</div>${x[1].map(todoRow).join('')}`).join('')||empty(visits.length?'Tutto fatto. Nessuna azione in sospeso.':'Le azioni delle tue visite compariranno qui.');
+  }else{const d=acts.filter(a=>a.fatta).sort((a,b)=>(b.fattaIl||'').localeCompare(a.fattaIl||''));h=d.length?d.map(todoRow).join(''):empty('Nessuna azione completata.')}
+  $('todo').innerHTML=h;
+}
+document.addEventListener('change',e=>{const t=e.target;if(t.type==='checkbox'&&t.dataset.a)toggleAct(t.dataset.v,t.dataset.a,t.checked)});
+$('c-open').onclick=()=>{filt='open';renderTodo()};$('c-done').onclick=()=>{filt='done';renderTodo()};
+
+/* ---------- visite ---------- */
+function renderList(){
+  const q=$('q').value.trim().toLowerCase();
+  const vs=visits.slice().sort((a,b)=>(b.data||'').localeCompare(a.data||'')||(b.salvata||'').localeCompare(a.salvata||'')).filter(v=>!q||JSON.stringify([v.cliente,v.luogo,v.con,v.persone,v.prodotti,v.crm]).toLowerCase().includes(q));
+  $('list').innerHTML=vs.length?vs.map(v=>{const o=(v.azioni||[]).filter(a=>!a.fatta).length;return `<button class="card" type="button" data-open="${esc(v.id)}"><b>${esc(v.cliente)}</b>${o?`<span class="badge">${o} da fare</span>`:''}<div class="m">${esc(fmt(v.data))}${v.luogo?' · '+esc(v.luogo):''}${v.con?' · con '+esc(v.con):''}</div></button>`}).join(''):empty(q?'Nessuna visita trovata.':'Nessuna visita salvata. Registra la prima dalla scheda Nuova.');
+}
+$('q').addEventListener('input',renderList);
+let openId=null;
+function openVisit(id){openId=id;drawSheet();$('sheet').classList.add('on');$('sheet').scrollTop=0}
+function drawSheet(){
+  const v=visits.find(x=>x.id===openId);if(!v){$('sheet').classList.remove('on');return}
+  $('sheet-in').innerHTML=`<button class="back" id="s-back" type="button">‹ Indietro</button>
+  <h2 style="margin-top:6px">${esc(v.cliente)}</h2><div style="color:var(--mute);font-size:14px;margin-top:4px">${esc(fmt(v.data))}${v.luogo?' · '+esc(v.luogo):''}${v.con?' · con '+esc(v.con):''}${v.durata?' · audio '+esc(v.durata):''}</div>
+  <div class="sec"><h3>Testo per il CRM <button class="btn ghost sm" id="s-copy" type="button">Copia</button></h3><pre class="crm">${esc(v.crm)}</pre></div>
+  <div class="sec"><h3>Azioni</h3>${(v.azioni||[]).length?v.azioni.map(a=>todoRow({...a,v})).join(''):'<div class="hint">Nessuna azione.</div>'}</div>
+  <div class="sec">${detHTML(v)}</div>
+  ${v.trascrizione?`<details><summary>${v.modo==='riun'?'Passaggi salienti':'Trascrizione'}</summary><pre class="crm">${esc(v.trascrizione)}</pre></details>`:''}
+  ${v.raw?`<details><summary>Note scritte</summary><pre class="crm">${esc(v.raw)}</pre></details>`:''}
+  <button class="btn full danger" id="s-del" type="button">Elimina visita</button>`;
+  $('s-back').onclick=()=>{$('sheet').classList.remove('on');openId=null};
+  $('s-copy').onclick=()=>copy(v.crm);
+  let arm=false;$('s-del').onclick=()=>{if(!arm){arm=true;$('s-del').textContent='Tocca di nuovo per eliminare';return}$('sheet').classList.remove('on');openId=null;remove(v.id);toast('Visita eliminata')};
+}
+document.addEventListener('click',e=>{const o=e.target.closest('[data-open]');if(o){e.preventDefault();if(!$('sheet').classList.contains('on'))location.hash='#visite';openVisit(o.dataset.open)}});
+
+/* ---------- impostazioni e backup ---------- */
+function openSettings(){const c=cfg();$('k-key').value=c.key;$('k-model').value=c.model;$('k-lang').value=c.lang;$('settings').classList.add('on')}
+$('b-set').onclick=openSettings;$('s-close').onclick=()=>$('settings').classList.remove('on');
+$('k-save').onclick=()=>{ls.set('vv-cfg',{key:$('k-key').value.trim(),model:$('k-model').value.trim()||'gemini-flash-latest',lang:$('k-lang').value});$('settings').classList.remove('on');$('nokey').hidden=!!cfg().key;toast('Impostazioni salvate')};
+$('k-exp').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({app:'visite',versione:1,esportato:new Date().toISOString(),visits},null,1)],{type:'application/json'}));a.download='visite-backup-'+today()+'.json';document.body.append(a);a.click();a.remove()};
+$('k-imp').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const j=JSON.parse(await f.text());const inc=Array.isArray(j)?j:j.visits;if(!Array.isArray(inc))throw 0;let n=0;inc.forEach(v=>{if(v&&v.id&&!visits.some(x=>x.id===v.id)){visits.push(v);n++}});ls.set('vv-visits',visits);renderAll();toast(n+' visite importate')}catch(x){toast('File di backup non valido')}e.target.value=''};
+
+/* ---------- navigazione ---------- */
+const titles={nuova:'Nuova visita',azioni:'Azioni',visite:'Visite'};
+function route(){const h=(location.hash||'#nuova').slice(1),k=titles[h]?h:'nuova';Object.keys(titles).forEach(x=>{$('v-'+x).classList.toggle('on',x===k);$('n-'+x).classList.toggle('on',x===k)});$('ttl').textContent=titles[k]}
+function renderAll(){renderTodo();renderList();if(openId)drawSheet()}
+addEventListener('hashchange',route);route();renderAll();$('nokey').hidden=!!cfg().key;
+}
+</script>
+</body>
+</html>
